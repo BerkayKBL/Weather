@@ -50,7 +50,7 @@ data class WeatherForecast(
 fun setWeather(context: Context) {
     var conditionJSONData: String? = null
     try {
-        val inputStream = context.assets.open("weather.json")
+        val inputStream = context.assets.open("weathedr.json")
         val size = inputStream.available()
         val buffer = ByteArray(size)
         inputStream.read(buffer)
