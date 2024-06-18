@@ -47,7 +47,6 @@ fun setWeather(context: Context) {
         inputStream.read(buffer)
         inputStream.close()
         conditionJSONData = String(buffer, Charset.defaultCharset())
-
     } catch (ex: IOException) {
         ex.printStackTrace()
     }
