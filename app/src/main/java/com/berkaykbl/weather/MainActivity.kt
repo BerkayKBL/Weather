@@ -1,5 +1,6 @@
 package com.berkaykbl.weather
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -156,16 +158,19 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("RememberReturnType")
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Greeting(mainViewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     val data = mainViewModel.data.collectAsState().value
     var colorScheme = MaterialTheme.colorScheme
 
-    val locates =
-        listOf("Esenyurt")
+    val locates = listOf("Esenyurt", "Ordu")
     remember {
         mainViewModel.fetchData(locates)
+    }
+    val title = remember {
+        mutableStateOf("")
     }
 
     val pagerState = rememberPagerState(pageCount = { locates.size }, initialPage = 0)
@@ -184,27 +189,36 @@ fun Greeting(mainViewModel: MainViewModel = androidx.lifecycle.viewmodel.compose
             Icon(
                 painter = painterResource(id = R.drawable.city),
                 contentDescription = "Locates",
-                modifier = Modifier.size(30.dp),
+                modifier = Modifier.size(20.dp),
                 tint = colorScheme.secondary
             )
             Spacer(modifier = Modifier.width(10.dp))
             Icon(
                 painter = painterResource(id = R.drawable.three_dot),
                 contentDescription = "Settings",
-                modifier = Modifier.size(30.dp),
+                modifier = Modifier.size(20.dp),
                 tint = colorScheme.secondary
             )
 
         }
 
-        Column (modifier = Modifier.fillMaxSize()) {
+        Spacer(modifier = Modifier.size(0.dp, 50.dp))
+        Column(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+
+            Text(
+                text = title.value,
+                fontSize = 25.sp,
+                modifier = Modifier.padding(0.dp, 5.dp),
+                color = MaterialTheme.colorScheme.secondary,
+                fontWeight = FontWeight.Bold,
+            )
             HorizontalPager(
                 pagerState,
-                modifier = Modifier.fillMaxSize()
             ) { index ->
                 val locateName = locates[index]
 
-                println("qwewqe")
 
                 data.let {
                     val locate = data[locateName]
@@ -261,32 +275,40 @@ fun Greeting(mainViewModel: MainViewModel = androidx.lifecycle.viewmodel.compose
                             i++
                         }
 
-                        val weatherLocate =
-                            WeatherLocate(
-                                locateName,
-                                getConditionText(
-                                    current.condition.get("code").asInt,
-                                    language,
-                                    true
-                                ),
-                                current.temp_c,
-                                current.wind_kph,
-                                current.wind_dir,
-                                current.vis_km,
-                                current.humidity,
-                                current.uv,
-                                hourlyWeather,
-                                dailyWeather
-                            )
+                        val weatherLocate = WeatherLocate(
+                            locateName,
+                            getConditionText(
+                                current.condition.get("code").asInt, language, true
+                            ),
+                            current.temp_c,
+                            current.wind_kph,
+                            current.wind_dir,
+                            current.vis_km,
+                            current.humidity,
+                            current.uv,
+                            hourlyWeather,
+                            dailyWeather
+                        )
                         LazyColumn(
                             modifier = Modifier
                                 .padding(5.dp, 0.dp)
+                                .fillMaxSize()
                         ) {
                             item {
                                 LocatePage(weatherLocate)
+                                Spacer(modifier = Modifier.height(15.dp))
                             }
                             item {
-                                LocatePageHourly(weatherLocate)
+                                LocatePageHourly(weatherLocate.weatherHourly)
+                            }
+                            item {
+                                Spacer(modifier = Modifier.height(15.dp))
+                                LocatePageDaily(weatherLocate.weatherDaily)
+                            }
+
+                            item {
+                                Spacer(modifier = Modifier.height(15.dp))
+                                LocatePageDetails(weatherLocate)
                             }
                         }
                     }

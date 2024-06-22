@@ -286,7 +286,7 @@ fun Greeting2(mainViewModel: MainViewModel = androidx.lifecycle.viewmodel.compos
                                 LocatePage(weatherLocate)
                             }
                             item {
-                                LocatePageHourly(weatherLocate)
+                                //LocatePageHourly(weatherLocate)
                             }
                         }
                     }

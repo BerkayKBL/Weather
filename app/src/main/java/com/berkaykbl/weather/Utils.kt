@@ -1,6 +1,7 @@
 package com.berkaykbl.weather
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -41,14 +42,23 @@ fun getConditionText(code: Int, language: String, isDay: Boolean) : String {
 
 
     if (condition != null) {
+
+
+
         val languages = condition.asJsonObject.get("languages").asJsonArray
 
-        val language = languages.find {
+        val languageJson = languages.find {
             it.asJsonObject.get("lang_iso").asString.equals(language)
-        } ?: return getConditionText(code, defaultLanguage, isDay)
+        }
 
-        conditionText = if (isDay) language.asJsonObject.get("day_text").asString
-        else language.asJsonObject.get("night_text").asString
+        if (languageJson != null) {
+            conditionText = if (isDay) languageJson.asJsonObject.get("day_text").asString
+            else languageJson.asJsonObject.get("night_text").asString
+        } else {
+            conditionText = if (isDay) condition.asJsonObject.get("day").asString
+            else condition.asJsonObject.get("night").asString
+        }
+
     }
 
     return conditionText

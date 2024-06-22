@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.nio.charset.Charset
+import java.util.UUID
 
 
 private var weatherJSON = JsonObject()
@@ -31,7 +32,7 @@ data class WeatherCurrent(
     val uv: Float,
     val vis_km: Float,
     val vis_miles: Float,
-    val condition: JsonObject
+    val condition: JsonObject,
 )
 
 data class WeatherForecast(
