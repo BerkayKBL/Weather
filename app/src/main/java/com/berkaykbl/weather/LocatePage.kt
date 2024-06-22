@@ -45,6 +45,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -84,65 +85,6 @@ fun LocatePage(locate: WeatherLocate) {
     )
 
     Spacer(modifier = Modifier.height(15.dp))
-
-    /*Spacer(modifier = Modifier.height(15.dp))
-
-    LazyColumn(
-        modifier = Modifier
-            .clip(RoundedCornerShape(10.dp))
-            .background(colorScheme.tertiary)
-            .padding(0.dp, 5.dp)
-            .fillMaxWidth()
-    ) {
-        items(locate.weatherDaily) { currentDay ->
-            Spacer(modifier = Modifier.height(5.dp))
-            LazyRow(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(10.dp, 0.dp)
-            ) {
-                item {
-                    Text(
-                        text = currentDay.date,
-                        color = colorScheme.secondary,
-                        fontSize = 18.sp
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.sunny_day),
-                        contentDescription = "isNight",
-                        modifier = Modifier
-                            .size(40.dp)
-                            .padding(0.dp, 10.dp),
-                        contentScale = ContentScale.Crop
-                    )
-                    Text(
-                        text = currentDay.text,
-                        color = colorScheme.secondary,
-                        fontSize = 18.sp,
-                        modifier = Modifier
-                            .padding(3.dp, 0.dp)
-                            .width(100.dp)
-                            .basicMarquee(
-                                animationMode = MarqueeAnimationMode.Immediately,
-                                delayMillis = 1,
-                                initialDelayMillis = 1
-                            ),
-                        softWrap = false,
-                        overflow = TextOverflow.Clip
-                    )
-                    Text(
-                        text = "${currentDay.maxtemp_c}/${currentDay.mintemp_c}",
-                        color = colorScheme.secondary,
-                        fontSize = 18.sp
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.padding(2.dp))
-        }
-
-    }
-
-    */
 
 
 }
@@ -186,38 +128,6 @@ fun LocatePageHourly(weatherHourly: ArrayList<WeatherHourly>) {
             Spacer(modifier = Modifier.width(5.dp))
         }
     }
-    /*LazyRow(
-            modifier = Modifier
-                .clip(RoundedCornerShape(10.dp))
-                .background(colorScheme.tertiary)
-                .padding(0.dp, 15.dp)
-        ) {
-            items(locate.weatherHourly) { currentHour ->
-
-                Spacer(modifier = Modifier.width(10.dp))
-                Text(
-                    text = currentHour.hour,
-                    color = colorScheme.secondary,
-                    fontSize = 18.sp
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.sunny_day),
-                    contentDescription = "isNight",
-                    modifier = Modifier
-                        .size(40.dp)
-                        .padding(0.dp, 10.dp),
-                    contentScale = ContentScale.Crop,
-
-                    )
-                Text(
-                    text = currentHour.temp_c.toString(),
-                    color = colorScheme.secondary,
-                    fontSize = 18.sp
-                )
-
-                Spacer(modifier = Modifier.width(10.dp))
-            }
-        }*/
 }
 
 @Composable
@@ -242,18 +152,26 @@ fun LocatePageDaily(weatherDaily: ArrayList<WeatherDaily>) {
                     text = currentDay.date,
                     modifier = Modifier.weight(1f),
                     color = colorScheme.secondary,
+                    fontSize = 14.sp,
+                    softWrap = false,
+                    overflow = TextOverflow.Ellipsis
                 )
-                Image(painter = painterResource(id = R.drawable.sunny_day), contentDescription = "")
+                Image(painter = painterResource(id = R.drawable.sunny_day), contentDescription = "",
+                    modifier = Modifier.size(30.dp))
                 Text(
-                    text = currentDay.text,
+                    text = "Çoğunlukla Rü",
                     color = colorScheme.secondary,
                     modifier = Modifier
                         .padding(5.dp, 0.dp)
-                        .width(100.dp),
+                        .width(80.dp),
+                    fontSize = 14.sp,
+                    overflow = TextOverflow.Ellipsis,
+                    softWrap = false
                 )
                 Text(
                     text = "${currentDay.maxtemp_c}/${currentDay.mintemp_c}",
                     color = colorScheme.secondary,
+                    fontSize = 14.sp
                 )
             }
             day++
@@ -343,47 +261,4 @@ fun LocatePageDetails(locate: WeatherLocate) {
         }
     }
 
-    /*Row(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-
-        ) {
-            Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(colorScheme.tertiary)
-                    .padding(0.dp, 5.dp)
-            ) {
-                Icon(Icons.Rounded.Info, contentDescription = "wind")
-                Text(text = getStringResourceByName(name = locate.wind_dir))
-
-                Row(
-                    verticalAlignment = Alignment.Bottom
-                ) {
-                    Text(text = locate.wind_kph.toString(), fontSize = 20.sp)
-                    Text(text = "km/h", fontSize = 18.sp)
-                }
-            }
-            Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(colorScheme.tertiary)
-                    .padding(0.dp, 5.dp)
-            ) {
-                Icon(Icons.Rounded.Info, contentDescription = "wind")
-                Text(text = getStringResourceByName(name = locate.wind_dir))
-
-                Row(
-                    verticalAlignment = Alignment.Bottom
-                ) {
-                    Text(text = locate.wind_kph.toString(), fontSize = 20.sp)
-                    Text(text = "km/h", fontSize = 18.sp)
-                }
-            }
-        }
-        Column {
-
-        }
-    }*/
 }

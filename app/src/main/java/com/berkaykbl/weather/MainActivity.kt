@@ -41,12 +41,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -165,15 +167,21 @@ fun Greeting(mainViewModel: MainViewModel = androidx.lifecycle.viewmodel.compose
     val data = mainViewModel.data.collectAsState().value
     var colorScheme = MaterialTheme.colorScheme
 
-    val locates = listOf("Esenyurt", "Ordu")
+    val locates = listOf("Esenyurt", "Ordu", "İstanbul")
     remember {
         mainViewModel.fetchData(locates)
     }
+    val scrollState = rememberScrollState()
+    val pagerState = rememberPagerState(pageCount = { locates.size }, initialPage = 0)
     val title = remember {
         mutableStateOf("")
     }
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPageOffsetFraction }
+            .collect { offsetFraction ->
+            }
+    }
 
-    val pagerState = rememberPagerState(pageCount = { locates.size }, initialPage = 0)
 
     Column(
         modifier = Modifier
@@ -208,7 +216,7 @@ fun Greeting(mainViewModel: MainViewModel = androidx.lifecycle.viewmodel.compose
         ) {
 
             Text(
-                text = title.value,
+                text = "ee",
                 fontSize = 25.sp,
                 modifier = Modifier.padding(0.dp, 5.dp),
                 color = MaterialTheme.colorScheme.secondary,
@@ -230,28 +238,8 @@ fun Greeting(mainViewModel: MainViewModel = androidx.lifecycle.viewmodel.compose
                         val hourlyWeather = ArrayList<WeatherHourly>()
                         val dailyWeather = ArrayList<WeatherDaily>()
 
-                        val hours = forecastDay[0].asJsonObject.getAsJsonArray("hour")
 
                         var i = 0
-                        while (i < hours.size()) {
-                            val hour = hours[i].asJsonObject
-                            var time = hour.get("time").asString
-                            time = time.split(" ")[1]
-                            if (System.currentTimeMillis() < hour.get("time_epoch").asLong * 1000) {
-                                hourlyWeather.add(
-                                    WeatherHourly(
-                                        time,
-                                        hour.get("temp_c").asFloat,
-                                        hour.get("temp_f").asFloat,
-                                        ""
-                                    )
-                                )
-                            }
-
-                            i++
-                        }
-
-                        i = 0
                         while (i < forecastDay.size()) {
                             val day = forecastDay[i].asJsonObject
                             val date = day.get("date").asString
@@ -271,6 +259,28 @@ fun Greeting(mainViewModel: MainViewModel = androidx.lifecycle.viewmodel.compose
                                     ""
                                 )
                             )
+
+                            if (i == 0 || i == 1 && hourlyWeather.size < 24) {
+                                val hours = day.get("hour").asJsonArray
+                                var houri = 0
+                                while (houri < hours.size() && hourlyWeather.size < 24) {
+                                    val hour = hours[houri].asJsonObject
+                                    var time = hour.get("time").asString
+                                    time = time.split(" ")[1]
+                                    if (System.currentTimeMillis() - 3600000 < (hour.get("time_epoch").asLong) * 1000) {
+                                        hourlyWeather.add(
+                                            WeatherHourly(
+                                                time,
+                                                hour.get("temp_c").asFloat,
+                                                hour.get("temp_f").asFloat,
+                                                ""
+                                            )
+                                        )
+                                    }
+
+                                    houri++
+                                }
+                            }
 
                             i++
                         }

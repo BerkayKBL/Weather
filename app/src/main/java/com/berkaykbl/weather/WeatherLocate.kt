@@ -1,13 +1,8 @@
 package com.berkaykbl.weather
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
-import org.json.JSONArray
-import org.json.JSONObject
 import java.util.UUID
 
-@Immutable
 data class WeatherLocate (
     val title: String,
     val text: String,
@@ -31,7 +26,6 @@ data class WeatherLocate (
     val id: String = UUID.randomUUID().toString()
 )
 
-@Immutable
 data class WeatherHourly(
     val hour: String,
     val temp_c: Float,
@@ -40,7 +34,6 @@ data class WeatherHourly(
     val id: String = UUID.randomUUID().toString()
 )
 
-@Immutable
 data class WeatherDaily(
     val date: String,
     val text: String,
@@ -52,7 +45,6 @@ data class WeatherDaily(
     val id: String = UUID.randomUUID().toString()
 )
 
-@Immutable
 data class WeatherDetails(
     val icon: ImageVector,
     val title: String,
